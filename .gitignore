@@ -1,0 +1,16 @@
+# Environment variables - never commit these
+.env
+
+# Data folder - contains sensitive monitor details and outputs
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# OS
+.DS_Store
+Thumbs.db
