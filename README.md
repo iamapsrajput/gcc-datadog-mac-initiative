@@ -19,7 +19,7 @@ Terraform pilot migration → SOP → outcome.
 ## Repository Structure
 
 ```
-datadog-mac-initiative/
+gcc-datadog-mac-initiative/
 ├── scripts/
 │   ├── extract_dce_monitors.py   # Extracts DCE L1 monitors via Datadog API
 │   └── audit_dce_monitors.py     # Processes raw data into audit spreadsheet
@@ -41,8 +41,8 @@ datadog-mac-initiative/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-org/datadog-mac-initiative.git
-cd datadog-mac-initiative
+git clone https://github.com/iamapsrajput/gcc-datadog-mac-initiative.git
+cd gcc-datadog-mac-initiative
 ```
 
 ### 2. Install dependencies
