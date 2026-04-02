@@ -28,6 +28,7 @@ datadog-mac-initiative/
 │   │   └── 01-discovery/         # Evidence screenshots from audit phase
 │   └── ...                       # Design docs and SOPs (added progressively)
 ├── data/                         # Generated outputs - not committed (see .gitignore)
+├── requirements.txt              # Pinned Python dependencies
 ├── .env.example                  # Template for required environment variables
 ├── .gitignore
 └── README.md
@@ -47,7 +48,7 @@ cd datadog-mac-initiative
 ### 2. Install dependencies
 
 ```bash
-pip install requests python-dotenv openpyxl
+pip install -r requirements.txt
 ```
 
 ### 3. Configure environment variables

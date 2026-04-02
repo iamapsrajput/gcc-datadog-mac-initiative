@@ -1,6 +1,9 @@
 # Environment variables - never commit these
 .env
 
+# Editor — local-only for now
+.vscode/
+
 # Data folder - contains sensitive monitor details and outputs
 data/
 

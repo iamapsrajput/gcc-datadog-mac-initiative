@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from datetime import datetime
 from collections import Counter
 import openpyxl
@@ -26,7 +27,11 @@ def get_asset_id(tags):
 
 
 def get_snow_info(notifications):
-    snow_handles = [n["handle"] for n in notifications if "servicenow" in n.get("handle", "").lower()]
+    snow_handles = [
+        n["handle"]
+        for n in notifications
+        if "servicenow" in n.get("handle", "").lower()
+    ]
     if not snow_handles:
         return "None", "None", "Gap - No SNOW"
     handle_str = ", ".join(snow_handles)
@@ -53,7 +58,11 @@ def classify(monitor):
     muted = monitor.get("muted_until_ts")
     notifications = monitor.get("notifications", [])
 
-    snow_handles = [n["handle"] for n in notifications if "servicenow" in n.get("handle", "").lower()]
+    snow_handles = [
+        n["handle"]
+        for n in notifications
+        if "servicenow" in n.get("handle", "").lower()
+    ]
     has_asset_id = any(t.startswith("tr_application-asset-insight-id:") for t in tags)
     is_managed = any(t == "managed-by:terraform" for t in tags)
 
@@ -71,7 +80,10 @@ def classify(monitor):
         return "Fix then Migrate"
     if not snow_handles:
         return "Fix then Migrate"
-    if any(L2_SNOW_HANDLE in h for h in snow_handles) and not any(L1_SNOW_HANDLE in h for h in snow_handles):
+    l2_without_l1 = any(L2_SNOW_HANDLE in h for h in snow_handles) and not any(
+        L1_SNOW_HANDLE in h for h in snow_handles
+    )
+    if l2_without_l1:
         return "Fix then Migrate"
     if muted:
         return "Investigate"
@@ -232,7 +244,9 @@ def build_audit(monitors):
 
     rec_counts = Counter(classify(m) for m in monitors)
     status_counts = Counter(m.get("status", "Unknown") for m in monitors)
-    snow_counts = Counter(get_snow_info(m.get("notifications", []))[1] for m in monitors)
+    snow_counts = Counter(
+        get_snow_info(m.get("notifications", []))[1] for m in monitors
+    )
     no_asset = sum(1 for m in monitors if get_asset_id(m.get("tags", [])) == "MISSING")
     muted_count = sum(1 for m in monitors if m.get("muted_until_ts"))
 
@@ -277,13 +291,15 @@ def build_audit(monitors):
 if __name__ == "__main__":
     if not os.path.exists(INPUT_FILE):
         print(f"Error: {INPUT_FILE} not found. Run extract_dce_monitors.py first.")
-        exit(1)
+        sys.exit(1)
 
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
         monitors = json.load(f)
 
     print(f"Processing {len(monitors)} monitors...")
-    rec_counts, status_counts, snow_counts, no_asset, muted_count = build_audit(monitors)
+    rec_counts, status_counts, snow_counts, no_asset, muted_count = (
+        build_audit(monitors)
+    )
 
     print(f"\n✅ Audit saved to {OUTPUT_FILE}")
     print(f"\n{'=' * 40}")

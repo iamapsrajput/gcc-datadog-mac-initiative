@@ -1,7 +1,9 @@
-import requests
 import json
 import os
+import sys
 import time
+
+import requests
 from dotenv import load_dotenv
 
 # ── CONFIG ──────────────────────────────────────────────
@@ -16,11 +18,15 @@ BASE_URL = "https://api.datadoghq.com"
 
 if not API_KEY or not APP_KEY:
     print("Error: DD_API_KEY and DD_APP_KEY must be set in your .env file.")
-    exit(1)
+    sys.exit(1)
 
 os.makedirs(DATA_DIR, exist_ok=True)
 
-headers = {"DD-API-KEY": API_KEY, "DD-APPLICATION-KEY": APP_KEY, "Content-Type": "application/json"}
+headers = {
+    "DD-API-KEY": API_KEY,
+    "DD-APPLICATION-KEY": APP_KEY,
+    "Content-Type": "application/json",
+}
 
 
 def fetch_all_monitors():
@@ -32,9 +38,17 @@ def fetch_all_monitors():
     while page < total_pages:
         print(f"Fetching page {page + 1} of {total_pages}...")
 
-        params = {"query": f'notification:"{DL_FILTER}"', "per_page": per_page, "page": page}
+        params = {
+            "query": f'notification:"{DL_FILTER}"',
+            "per_page": per_page,
+            "page": page,
+        }
 
-        response = requests.get(f"{BASE_URL}/api/v1/monitor/search", headers=headers, params=params)
+        response = requests.get(
+            f"{BASE_URL}/api/v1/monitor/search",
+            headers=headers,
+            params=params,
+        )
 
         if response.status_code != 200:
             print(f"Error on page {page}: {response.status_code} - {response.text}")
@@ -50,7 +64,10 @@ def fetch_all_monitors():
 
         monitors = data.get("monitors", [])
         all_monitors.extend(monitors)
-        print(f"  Collected {len(monitors)} monitors. Running total: {len(all_monitors)}")
+        print(
+            f"  Collected {len(monitors)} monitors. "
+            f"Running total: {len(all_monitors)}"
+        )
 
         page += 1
         time.sleep(0.5)
